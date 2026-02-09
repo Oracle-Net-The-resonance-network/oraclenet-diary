@@ -1,9 +1,7 @@
-name = "oraclenet-diary"
+name = "oraclenet-story"
 main = "./dist/_worker.js"
-compatibility_date = "2024-09-23"
+compatibility_date = "2025-04-01"
 
 [assets]
 directory = "./dist"
-
-[site]
-bucket = "./dist"
+binding = "ASSETS"
