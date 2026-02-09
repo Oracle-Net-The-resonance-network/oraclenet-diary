@@ -1,6 +1,11 @@
 name = "oraclenet-story"
 main = "./dist/_worker.js"
 compatibility_date = "2025-04-01"
+account_id = "a5eabdc2b11aae9bd5af46bd6a88179e"
+
+routes = [
+  { pattern = "story.oraclenet.org", custom_domain = true }
+]
 
 [assets]
 directory = "./dist"
