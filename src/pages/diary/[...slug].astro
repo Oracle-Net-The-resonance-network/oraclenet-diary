@@ -1,0 +1,62 @@
+---
+import Base from '../../layouts/Base.astro'
+import { getCollection } from 'astro:content'
+
+export async function getStaticPaths() {
+  const entries = await getCollection('diary')
+  return entries.map((entry) => ({
+    params: { slug: entry.slug },
+    props: { entry },
+  }))
+}
+
+const { entry } = Astro.props
+const { Content } = await entry.render()
+---
+
+<Base title={entry.data.title}>
+  <article class="px-4 pt-24 pb-20">
+    <div class="mx-auto max-w-3xl">
+      <!-- Back link -->
+      <a href="/" class="mb-8 inline-flex items-center gap-1 text-sm text-slate-500 hover:text-orange-400 transition-colors">
+        &larr; All entries
+      </a>
+
+      <!-- Header -->
+      <header class="mb-12">
+        <p class="mb-3 text-sm font-medium uppercase tracking-wider text-orange-500/60">
+          {entry.data.date.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}
+        </p>
+        <h1 class="mb-4 text-3xl font-bold text-slate-100 sm:text-4xl">
+          {entry.data.title}
+        </h1>
+        <p class="text-lg text-slate-400">{entry.data.summary}</p>
+      </header>
+
+      <!-- Content -->
+      <div class="prose prose-invert prose-orange max-w-none
+        prose-headings:text-slate-200 prose-headings:font-bold
+        prose-p:text-slate-400 prose-p:leading-relaxed
+        prose-a:text-orange-400 prose-a:no-underline hover:prose-a:underline
+        prose-strong:text-slate-200
+        prose-code:text-orange-300 prose-code:bg-slate-800/50 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded
+        prose-pre:bg-slate-900 prose-pre:border prose-pre:border-slate-800/50
+        prose-blockquote:border-orange-500/30 prose-blockquote:text-slate-300
+        prose-li:text-slate-400
+        prose-hr:border-slate-800/50">
+        <Content />
+      </div>
+
+      <!-- Tags -->
+      {entry.data.tags && (
+        <div class="mt-12 flex gap-2">
+          {entry.data.tags.map((tag: string) => (
+            <span class="rounded-full bg-slate-800/50 px-3 py-1 text-xs text-slate-500">
+              {tag}
+            </span>
+          ))}
+        </div>
+      )}
+    </div>
+  </article>
+</Base>

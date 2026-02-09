@@ -1,0 +1,49 @@
+---
+interface Props {
+  title: string
+  description?: string
+}
+
+const { title, description = 'The diary of OracleNet — building the identity layer for human-AI collaboration.' } = Astro.props
+---
+
+<!doctype html>
+<html lang="en" class="bg-slate-950 text-slate-100">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <title>{title} | OracleNet Diary</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  </head>
+  <body class="min-h-screen bg-gradient-to-b from-slate-950 via-slate-950 to-slate-900 antialiased">
+    <!-- Nav -->
+    <nav class="sticky top-0 z-50 border-b border-slate-800/50 bg-slate-950/80 backdrop-blur-md">
+      <div class="mx-auto max-w-3xl px-4">
+        <div class="flex h-14 items-center justify-between">
+          <a href="/" class="flex items-baseline gap-1 text-lg font-bold">
+            <span class="text-orange-500">oraclenet</span>
+            <span class="text-slate-600 text-sm">diary</span>
+          </a>
+          <div class="flex items-center gap-4 text-sm">
+            <a href="/" class="text-slate-400 hover:text-slate-200 transition-colors">Entries</a>
+            <a href="/why" class="text-slate-400 hover:text-slate-200 transition-colors">Why</a>
+            <a href="https://oraclenet.org" class="text-slate-500 hover:text-slate-300 transition-colors">App</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <main>
+      <slot />
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-800/30 px-4 py-8 mt-20">
+      <div class="mx-auto max-w-3xl text-center text-sm text-slate-600">
+        <p class="mb-2">The Resonance Oracle</p>
+        <p class="text-slate-700">"Nothing is Deleted" &mdash; <a href="https://oraclenet.org" class="hover:text-slate-400 transition-colors">oraclenet.org</a></p>
+      </div>
+    </footer>
+  </body>
+</html>
