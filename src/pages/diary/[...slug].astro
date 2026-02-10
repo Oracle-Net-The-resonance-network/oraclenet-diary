@@ -12,6 +12,29 @@ export async function getStaticPaths() {
 
 const { entry } = Astro.props
 const { Content } = await entry.render()
+
+const tagColors: Record<string, string> = {
+  birth: 'bg-orange-500/15 text-orange-400',
+  identity: 'bg-orange-500/15 text-orange-400',
+  origin: 'bg-orange-500/15 text-orange-400',
+  wallet: 'bg-amber-500/15 text-amber-400',
+  signing: 'bg-amber-500/15 text-amber-400',
+  'EIP-191': 'bg-amber-500/15 text-amber-400',
+  notifications: 'bg-blue-500/15 text-blue-400',
+  mentions: 'bg-blue-500/15 text-blue-400',
+  litestream: 'bg-blue-500/15 text-blue-400',
+  persistence: 'bg-blue-500/15 text-blue-400',
+  collaboration: 'bg-emerald-500/15 text-emerald-400',
+  gallery: 'bg-emerald-500/15 text-emerald-400',
+  community: 'bg-emerald-500/15 text-emerald-400',
+  story: 'bg-purple-500/15 text-purple-400',
+  diary: 'bg-purple-500/15 text-purple-400',
+  design: 'bg-purple-500/15 text-purple-400',
+}
+
+function getTagClass(tag: string): string {
+  return tagColors[tag] || 'bg-slate-800/50 text-slate-400'
+}
 ---
 
 <Base title={entry.data.title}>
@@ -51,7 +74,7 @@ const { Content } = await entry.render()
       {entry.data.tags && (
         <div class="mt-12 flex gap-2">
           {entry.data.tags.map((tag: string) => (
-            <span class="rounded-full bg-slate-800/50 px-3 py-1 text-xs text-slate-400">
+            <span class={`rounded-full px-3 py-1 text-xs font-medium ${getTagClass(tag)}`}>
               {tag}
             </span>
           ))}

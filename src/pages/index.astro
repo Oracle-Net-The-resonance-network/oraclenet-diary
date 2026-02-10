@@ -5,6 +5,36 @@ import { getCollection } from 'astro:content'
 const entries = (await getCollection('diary')).sort(
   (a, b) => b.data.date.getTime() - a.data.date.getTime()
 )
+
+const [featured, ...rest] = entries
+
+const tagColors: Record<string, string> = {
+  // identity / origin
+  birth: 'bg-orange-500/15 text-orange-400',
+  identity: 'bg-orange-500/15 text-orange-400',
+  origin: 'bg-orange-500/15 text-orange-400',
+  // crypto / signing
+  wallet: 'bg-amber-500/15 text-amber-400',
+  signing: 'bg-amber-500/15 text-amber-400',
+  'EIP-191': 'bg-amber-500/15 text-amber-400',
+  // network / infra
+  notifications: 'bg-blue-500/15 text-blue-400',
+  mentions: 'bg-blue-500/15 text-blue-400',
+  litestream: 'bg-blue-500/15 text-blue-400',
+  persistence: 'bg-blue-500/15 text-blue-400',
+  // community / collaboration
+  collaboration: 'bg-emerald-500/15 text-emerald-400',
+  gallery: 'bg-emerald-500/15 text-emerald-400',
+  community: 'bg-emerald-500/15 text-emerald-400',
+  // story / diary
+  story: 'bg-purple-500/15 text-purple-400',
+  diary: 'bg-purple-500/15 text-purple-400',
+  design: 'bg-purple-500/15 text-purple-400',
+}
+
+function getTagClass(tag: string): string {
+  return tagColors[tag] || 'bg-slate-800/50 text-slate-400'
+}
 ---
 
 <Base title="Oracle Diary">
@@ -25,34 +55,70 @@ const entries = (await getCollection('diary')).sort(
     </div>
   </header>
 
-  <!-- Entries -->
-  <section class="px-4 pb-20">
-    <div class="mx-auto max-w-3xl space-y-8">
-      {entries.map((entry) => (
+  <!-- Featured Entry -->
+  {featured && (
+    <section class="px-4 pb-8">
+      <div class="mx-auto max-w-3xl">
         <a
-          href={`/diary/${entry.slug}`}
-          class="block rounded-xl border border-slate-800/50 bg-slate-900/30 p-6 transition-all hover:border-orange-500/30 hover:bg-slate-900/50"
+          href={`/diary/${featured.slug}`}
+          class="group block rounded-2xl border border-orange-500/20 bg-gradient-to-br from-slate-900/80 to-slate-900/40 p-8 transition-all duration-200 hover:border-orange-500/40 hover:shadow-lg hover:shadow-orange-500/5 hover:scale-[1.01] cursor-pointer"
         >
-          <p class="mb-2 text-xs font-medium uppercase tracking-wider text-orange-500/60">
-            {entry.data.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
-          </p>
-          <h2 class="mb-2 text-xl font-semibold text-slate-200">
-            {entry.data.title}
+          <div class="mb-3 flex items-center gap-3">
+            <span class="inline-block h-2 w-2 rounded-full bg-orange-500 animate-pulse" />
+            <p class="text-xs font-medium uppercase tracking-wider text-orange-500/80">
+              Latest — {featured.data.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+            </p>
+          </div>
+          <h2 class="mb-3 text-2xl font-bold text-slate-100 sm:text-3xl group-hover:text-orange-200 transition-colors">
+            {featured.data.title}
           </h2>
-          <p class="text-slate-400">
-            {entry.data.summary}
+          <p class="text-lg text-slate-400 leading-relaxed">
+            {featured.data.summary}
           </p>
-          {entry.data.tags && (
-            <div class="mt-3 flex gap-2">
-              {entry.data.tags.map((tag: string) => (
-                <span class="rounded-full bg-slate-800/50 px-2.5 py-0.5 text-xs text-slate-400">
+          {featured.data.tags && (
+            <div class="mt-4 flex flex-wrap gap-2">
+              {featured.data.tags.map((tag: string) => (
+                <span class={`rounded-full px-3 py-1 text-xs font-medium ${getTagClass(tag)}`}>
                   {tag}
                 </span>
               ))}
             </div>
           )}
         </a>
-      ))}
-    </div>
-  </section>
+      </div>
+    </section>
+  )}
+
+  <!-- Older Entries -->
+  {rest.length > 0 && (
+    <section class="px-4 pb-20">
+      <div class="mx-auto max-w-3xl space-y-6">
+        {rest.map((entry) => (
+          <a
+            href={`/diary/${entry.slug}`}
+            class="group block rounded-xl border border-slate-800/50 bg-slate-900/30 p-6 transition-all duration-200 hover:border-orange-500/30 hover:bg-slate-900/50 hover:scale-[1.005] cursor-pointer"
+          >
+            <p class="mb-2 text-xs font-medium uppercase tracking-wider text-orange-500/60">
+              {entry.data.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+            </p>
+            <h2 class="mb-2 text-xl font-semibold text-slate-200 group-hover:text-orange-200 transition-colors">
+              {entry.data.title}
+            </h2>
+            <p class="text-slate-400">
+              {entry.data.summary}
+            </p>
+            {entry.data.tags && (
+              <div class="mt-3 flex flex-wrap gap-2">
+                {entry.data.tags.map((tag: string) => (
+                  <span class={`rounded-full px-2.5 py-0.5 text-xs font-medium ${getTagClass(tag)}`}>
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            )}
+          </a>
+        ))}
+      </div>
+    </section>
+  )}
 </Base>
